@@ -192,7 +192,7 @@
                 "volumeMounts": [
                   {
                     "mountPath": "/etc/httpd/tls",
-                    "name": "service-cert"
+                    "name": "tls-secret"
                   }
                 ],
                 "image": " ",
