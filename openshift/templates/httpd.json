@@ -28,7 +28,7 @@
       "metadata": {
         "name": "${NAME}",
         "annotations": {
-          "service.beta.openshift.io/serving-cert-secret-name": "service-cert"
+          "service.beta.openshift.io/serving-cert-secret-name": "service-cert",
           "description": "Exposes and load balances the application pods"
         }
       },
