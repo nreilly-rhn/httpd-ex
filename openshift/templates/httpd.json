@@ -166,26 +166,26 @@
               "name": "${NAME}"
             }
           },
-         "volumes": [
-            {
-              "name": "tls-secret",
-              "secret": {
-                "defaultMode": 384,
-                "items": [
-                  {
-                    "key": "tls.crt",
-                    "path": "localhost.crt"
-                  },
-                  {
-                    "key": "tls.key",
-                    "path": "localhost.key"
-                  }
-                ],
-                "secretName": "service-cert"
-              }
-            }
-          ],
           "spec": {
+            "volumes": [
+               {
+                 "name": "tls-secret",
+                 "secret": {
+                   "defaultMode": 384,
+                   "items": [
+                     {
+                       "key": "tls.crt",
+                       "path": "localhost.crt"
+                     },
+                     {
+                       "key": "tls.key",
+                       "path": "localhost.key"
+                     }
+                   ],
+                   "secretName": "service-cert"
+                 }
+               }
+             ],
             "containers": [
               {
                 "name": "httpd-example",
