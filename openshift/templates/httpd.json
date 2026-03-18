@@ -5,17 +5,17 @@
     "name": "httpd-example",
     "annotations": {
       "openshift.io/display-name": "Apache HTTP Server",
-      "description": "An example Apache HTTP Server (httpd) application that serves static content. For more information about using this template, including OpenShift considerations, see https://github.com/sclorg/httpd-ex/blob/master/README.md.",
+      "description": "An example Apache HTTP Server (httpd) application that serves static content. For more information about using this template, including OpenShift considerations, see https://github.com/nreilly-rhn/httpd-ex/blob/master/README.md.",
       "tags": "quickstart,httpd",
       "iconClass": "icon-apache",
       "openshift.io/long-description": "This template defines resources needed to develop a static application served by Apache HTTP Server (httpd), including a build configuration and application deployment configuration.",
       "openshift.io/provider-display-name": "Red Hat, Inc.",
-      "openshift.io/documentation-url": "https://github.com/sclorg/httpd-ex",
+      "openshift.io/documentation-url": "https://github.com/nreilly-rhn/httpd-ex",
       "openshift.io/support-url": "https://access.redhat.com",
       "template.openshift.io/bindable": "false"
     }
   },
-  "message": "The following service(s) have been created in your project: ${NAME}.\n\nFor more information about using this template, including OpenShift considerations, see https://github.com/sclorg/httpd-ex/blob/master/README.md.",
+  "message": "The following service(s) have been created in your project: ${NAME}.\n\nFor more information about using this template, including OpenShift considerations, see https://github.com/nreilly-rhn/httpd-ex/blob/master/README.md.",
   "labels": {
       "template": "httpd-example",
       "app": "httpd-example",
@@ -28,15 +28,21 @@
       "metadata": {
         "name": "${NAME}",
         "annotations": {
+          "service.beta.openshift.io/serving-cert-secret-name": "service-cert"
           "description": "Exposes and load balances the application pods"
         }
       },
       "spec": {
         "ports": [
           {
-            "name": "web",
+            "name": "http",
             "port": 8080,
             "targetPort": 8080
+          },
+          {
+            "name": "https",
+            "port": 8443,
+            "targetPort": 8443
           }
         ],
         "selector": {
@@ -52,6 +58,13 @@
       },
       "spec": {
         "host": "${APPLICATION_DOMAIN}",
+        "port": {
+            "targetPort": "https"
+        },
+        "tls": {
+            "insecureEdgeTerminationPolicy": "Redirect",
+            "termination": "reencrypt"
+        },
         "to": {
           "kind": "Service",
           "name": "${NAME}"
@@ -153,14 +166,42 @@
               "name": "${NAME}"
             }
           },
+         "volumes": [
+            {
+              "name": "tls-secret",
+              "secret": {
+                "defaultMode": 384,
+                "items": [
+                  {
+                    "key": "tls.crt",
+                    "path": "localhost.crt"
+                  },
+                  {
+                    "key": "tls.key",
+                    "path": "localhost.key"
+                  }
+                ],
+                "secretName": "service-cert"
+              }
+            }
+          ],
           "spec": {
             "containers": [
               {
                 "name": "httpd-example",
+                "volumeMounts": [
+                  {
+                    "mountPath": "/etc/httpd/tls",
+                    "name": "tls-secret"
+                  }
+                ],
                 "image": " ",
                 "ports": [
                   {
                     "containerPort": 8080
+                  },
+                  {
+                    "containerPort": 8443
                   }
                 ],
                 "readinessProbe": {
@@ -227,7 +268,7 @@
       "displayName": "Git Repository URL",
       "description": "The URL of the repository with your application source code.",
       "required": true,
-      "value": "https://github.com/sclorg/httpd-ex.git"
+      "value": "https://github.com/nreilly-rhn/httpd-ex.git"
     },
     {
       "name": "SOURCE_REPOSITORY_REF",
