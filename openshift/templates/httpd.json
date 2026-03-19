@@ -195,7 +195,7 @@
                     "name": "tls"
                   }
                 ],
-                "image": " ",
+                "image": "image-registry.openshift-image-registry.svc:5000/cert-test/httpd-example@sha256:06f89410b1c3afbdfeb95d00378e371b81c0fecc9b9dcacdeda7a2b4049cb892",
                 "ports": [
                   {
                     "containerPort": 8080
